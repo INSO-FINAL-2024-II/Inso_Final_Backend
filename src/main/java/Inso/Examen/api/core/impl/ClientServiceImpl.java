@@ -9,6 +9,7 @@ import Inso.Examen.infra.exception.ClientRucNotFoundException;
 import Inso.Examen.infra.repository.ClientJuridicalRepository;
 import Inso.Examen.infra.repository.ClientNaturalRepository;
 import Inso.Examen.api.core.service.ClientService;
+import Inso.Examen.util.DocumentValidator; // Importamos la clase de validación
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,11 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public ClientNatural addClientNatural(ClientNaturalDTO clientDTO) {
+        // Validar el formato del DNI
+        if (!DocumentValidator.validateDni(clientDTO.getDni())) {
+            throw new IllegalArgumentException("El DNI debe tener exactamente 8 dígitos numéricos.");
+        }
+
         if (clientNaturalRepository.existsByDni(clientDTO.getDni())) {
             throw new IllegalArgumentException("Client with DNI " + clientDTO.getDni() + " already exists");
         }
@@ -62,7 +68,6 @@ public class ClientServiceImpl implements ClientService {
 
         return clientJuridicalRepository.save(client);
     }
-
     @Override
     public List<ClientNatural> getAllClientsNatural() {
         return clientNaturalRepository.findAll();
