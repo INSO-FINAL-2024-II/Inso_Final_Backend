@@ -57,4 +57,14 @@ public class GlobalExceptionHandler {
         errorResponse.put("error", ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ClientDniNotFoundException.class)
+    public ResponseEntity<String> handleClientDniNotFound(ClientDniNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ClientRucNotFoundException.class)
+    public ResponseEntity<String> handleClientRucNotFound(ClientRucNotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
